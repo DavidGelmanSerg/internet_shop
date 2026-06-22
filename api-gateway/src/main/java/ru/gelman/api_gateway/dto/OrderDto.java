@@ -1,6 +1,6 @@
 package ru.gelman.api_gateway.dto;
 
-import ru.gelman.orders_service.enums.OrderStatus;
+import ru.gelman.api_gateway.enums.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

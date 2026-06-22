@@ -20,6 +20,6 @@ public class OrderServiceClient {
     }
 
     public ProductDto createProduct(CreateProductRq rq, List<MultipartFile> productImages) {
-
+        return null;
     }
 }

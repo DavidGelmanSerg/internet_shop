@@ -2,7 +2,6 @@ package ru.gelman.orders_service.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.gelman.orders_service.dto.ProductInfoDto;
 import ru.gelman.orders_service.entity.Order;
@@ -98,5 +97,10 @@ public class OrderService {
     public List<Order> getOrderListForClient(Long id) {
         log.info("searching orders by client id: {}", id);
         return orderRepository.findByClientId(id);
+    }
+
+    public List<Order> getFullOrderList() {
+        log.info("extracting full product list");
+        return orderRepository.findAll();
     }
 }

@@ -49,6 +49,14 @@ public class OrderController {
         return orderMapper.toOrderDtoList(orderList);
     }
 
+    @GetMapping("/orders")
+    public List<OrderDto> getFullOrderList() {
+        log.info("getting full order list for client");
+        List<Order> orderList = orderService.getFullOrderList();
+        log.info("found orders: {} for client", orderList);
+        return orderMapper.toOrderDtoList(orderList);
+    }
+
     @PatchMapping("/orders/{id}/status")
     public void updateOrderStatus(@PathVariable Long id, @RequestParam("status") OrderStatus status) {
         log.info("cancelling order with id {}", id);

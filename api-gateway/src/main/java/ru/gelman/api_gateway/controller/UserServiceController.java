@@ -20,6 +20,4 @@ public class UserServiceController {
         this.authServiceClient = authServiceClient;
         this.orderServiceClient = orderServiceClient;
     }
-
-    //Здесь ручки юзеров
 }
