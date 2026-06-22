@@ -1,0 +1,70 @@
+package ru.gelman.orders_service.controller;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.web.bind.annotation.*;
+import ru.gelman.orders_service.dto.CreateOrderRq;
+import ru.gelman.orders_service.dto.KafkaOrderCreatedEvent;
+import ru.gelman.orders_service.dto.OrderDto;
+import ru.gelman.orders_service.entity.Order;
+import ru.gelman.orders_service.enums.OrderStatus;
+import ru.gelman.orders_service.mapper.OrderMapper;
+import ru.gelman.orders_service.service.OrderService;
+
+import java.util.List;
+
+@RestController
+@Slf4j
+public class OrderController {
+    private final OrderMapper orderMapper;
+    private final OrderService orderService;
+    private final KafkaTemplate<String, KafkaOrderCreatedEvent> kafkaTemplate;
+
+    @Value("${app.kafka.orders.topic}")
+    private String kafkaOrderEventsTopic;
+
+    @Autowired
+    public OrderController(OrderService orderService, OrderMapper orderMapper, KafkaTemplate<String, KafkaOrderCreatedEvent> kafkaTemplate) {
+        this.orderService = orderService;
+        this.orderMapper = orderMapper;
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
+    @PostMapping("/orders")
+    public OrderDto createOrder(@RequestBody CreateOrderRq rq) {
+        log.info("creating order by {}: {}", rq.clientId(), rq);
+        Order created = orderService.create(rq.clientId(), rq.productInfos());
+        kafkaTemplate.send(kafkaOrderEventsTopic, new KafkaOrderCreatedEvent(created.getId(), created.getClientId()));
+        log.info("created order: {}", created);
+        return orderMapper.toOrderDto(created);
+    }
+
+    @GetMapping("/orders/{id}")
+    public List<OrderDto> getOrderList(@PathVariable Long id) {
+        log.info("getting order list for client {}", id);
+        List<Order> orderList = orderService.getOrderListForClient(id);
+        log.info("found orders: {} for client: {}", orderList, id);
+        return orderMapper.toOrderDtoList(orderList);
+    }
+
+    @PatchMapping("/orders/{id}/status")
+    public void updateOrderStatus(@PathVariable Long id, @RequestParam("status") OrderStatus status) {
+        log.info("cancelling order with id {}", id);
+        Order updated = orderService.changeStatus(id, status);
+        log.info("updated order: {}", updated);
+    }
+
+    @PutMapping("/orders/{id}/products")
+    public void addProducts(@PathVariable Long id, @RequestBody List<Long> productIds) {
+        log.info("adding products: {} to order: {}", productIds, id);
+        orderService.addProducts(id, productIds);
+    }
+
+    @DeleteMapping("/orders/{id}/products")
+    public void removeProducts(@PathVariable Long id, @RequestBody List<Long> productIds) {
+        log.info("removing products: {} from order: {}", productIds, id);
+        orderService.removeProducts(id, productIds);
+    }
+}

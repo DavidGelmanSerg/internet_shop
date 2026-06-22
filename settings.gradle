@@ -1,0 +1,5 @@
+rootProject.name = 'internet_shop'
+include 'orders_service'
+include 'notification_service'
+include 'api-gateway'
+
