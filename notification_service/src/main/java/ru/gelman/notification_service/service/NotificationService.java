@@ -2,8 +2,8 @@ package ru.gelman.notification_service.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import ru.gelman.notification_service.client.UserServiceClient;
 import ru.gelman.notification_service.dto.UserContactInfo;
@@ -18,12 +18,12 @@ import java.util.List;
 @Service
 public class NotificationService {
     private final UserServiceClient userServiceClient;
-    private final MailSender email;
+    private final JavaMailSender email;
     @Value("${spring.mail.username}")
     private String fromEmail;
 
     @Autowired
-    public NotificationService(UserServiceClient userServiceClient, MailSender email) {
+    public NotificationService(UserServiceClient userServiceClient, JavaMailSender email) {
         this.userServiceClient = userServiceClient;
         this.email = email;
     }

@@ -35,7 +35,7 @@ public class OrderController {
     @PostMapping("/orders")
     public OrderDto createOrder(@RequestBody CreateOrderRq rq) {
         log.info("creating order by {}: {}", rq.clientId(), rq);
-        Order created = orderService.create(rq.clientId(), rq.productInfos());
+        Order created = orderService.create(rq.clientId(), rq.productIds());
         kafkaTemplate.send(kafkaOrderEventsTopic, new KafkaOrderCreatedEvent(created.getId(), created.getClientId()));
         log.info("created order: {}", created);
         return orderMapper.toOrderDto(created);
@@ -58,19 +58,20 @@ public class OrderController {
     }
 
     @PatchMapping("/orders/{id}/status")
-    public void updateOrderStatus(@PathVariable Long id, @RequestParam("status") OrderStatus status) {
+    public OrderDto updateOrderStatus(@PathVariable Long id, @RequestParam("status") OrderStatus status) {
         log.info("cancelling order with id {}", id);
         Order updated = orderService.changeStatus(id, status);
         log.info("updated order: {}", updated);
+        return orderMapper.toOrderDto(updated);
     }
 
-    @PutMapping("/orders/{id}/products")
+    @PutMapping("/orders/{id}/products/add")
     public void addProducts(@PathVariable Long id, @RequestBody List<Long> productIds) {
         log.info("adding products: {} to order: {}", productIds, id);
         orderService.addProducts(id, productIds);
     }
 
-    @DeleteMapping("/orders/{id}/products")
+    @PutMapping("/orders/{id}/products/remove")
     public void removeProducts(@PathVariable Long id, @RequestBody List<Long> productIds) {
         log.info("removing products: {} from order: {}", productIds, id);
         orderService.removeProducts(id, productIds);

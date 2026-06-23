@@ -18,6 +18,6 @@ public class AuthServiceClient {
     }
 
     public boolean verifyToken(String token) {
-        return restTemplate.getForEntity(userServiceUrl, String.class).getStatusCode().is2xxSuccessful();
+        return restTemplate.getForEntity(userServiceUrl + "/auth/verify", String.class).getStatusCode().is2xxSuccessful();
     }
 }

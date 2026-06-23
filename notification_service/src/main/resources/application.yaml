@@ -4,14 +4,16 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: username
-    password: password
+    username: davidgelman.univer@gmail.com
+    password: isau lxra qfzt dvte
     properties:
       mail:
         smtp:
           auth: true
-        starttls:
-          enable: true
+          starttls:
+            enable: true
+  config:
+    encoding: UTF-8
   kafka:
     bootstrap-servers: "localhost:9092"
     consumer:
