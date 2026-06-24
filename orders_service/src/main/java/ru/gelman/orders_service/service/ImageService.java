@@ -29,6 +29,9 @@ public class ImageService {
     }
 
     public List<Image> saveImagesForProduct(List<Image> images, Product product) {
+        if (images.isEmpty()) {
+            return new ArrayList<>();
+        }
         images.get(0).setPreview(true);
         List<Image> result = new ArrayList<>();
         for (Image image : images) {

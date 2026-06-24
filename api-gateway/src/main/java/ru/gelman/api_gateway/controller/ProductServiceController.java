@@ -15,6 +15,8 @@ import ru.gelman.api_gateway.service.OrderServiceClient;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/api")
 public class ProductServiceController {
     private final AuthServiceClient authServiceClient;
     private final OrderServiceClient orderServiceClient;

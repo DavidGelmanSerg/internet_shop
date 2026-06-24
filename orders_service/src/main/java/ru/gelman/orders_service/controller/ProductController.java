@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Collections;
 import ru.gelman.orders_service.dto.CreateProductRq;
 import ru.gelman.orders_service.dto.ProductDto;
 import ru.gelman.orders_service.entity.Product;
@@ -31,10 +33,10 @@ public class ProductController {
     }
 
     @PostMapping(value = "/products", consumes = {MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ProductDto createProduct(@RequestPart("productInfo") CreateProductRq productRq, @RequestPart("images") List<MultipartFile> images) {
+    public ProductDto createProduct(@RequestPart("productInfo") CreateProductRq productRq, @RequestPart(value = "images", required = false) List<MultipartFile> images) {
         try {
             log.info("creating a new product: {}", productRq);
-            Product created = productService.create(productMapper.toProductDto(productRq), imageMapper.toImageListEntity(images));
+            Product created = productService.create(productMapper.toProductDto(productRq), imageMapper.toImageListEntity(images != null ? images : Collections.emptyList()));
             log.info("created product: {}", created);
             return productMapper.toProductDto(created, imageMapper.toImageDtoList(created.getImages()));
         } catch (IOException e) {

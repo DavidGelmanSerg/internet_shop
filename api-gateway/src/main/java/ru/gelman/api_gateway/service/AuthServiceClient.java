@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class AuthServiceClient {
     private final RestTemplate restTemplate;
-    @Value("app.services.users.url")
+    @Value("${app.services.users.url}")
     private String userServiceUrl;
 
 

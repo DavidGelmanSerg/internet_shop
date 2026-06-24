@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
@@ -18,10 +19,11 @@ import ru.gelman.api_gateway.dto.ProductDto;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class OrderServiceClient {
     private final RestTemplate restTemplate;
     private final RestClient client;
-    @Value("app.services.orders.url")
+    @Value("${app.services.orders.url}")
     private String orderServiceUrl;
 
     @Autowired

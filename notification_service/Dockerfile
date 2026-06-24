@@ -1,6 +1,10 @@
-FROM eclipse-temurin:17
+FROM eclipse-temurin:17-jdk AS build
+WORKDIR /workspace
+COPY . .
+RUN sed -i 's/\r$//' gradlew && chmod +x gradlew && ./gradlew bootJar -x test --no-daemon
+
+FROM eclipse-temurin:17-jre-alpine
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+COPY --from=build /workspace/build/libs/*.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
