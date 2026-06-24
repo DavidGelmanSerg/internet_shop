@@ -1,10 +1,10 @@
 package ru.gelman.api_gateway.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +13,6 @@ import ru.gelman.api_gateway.dto.ProductDto;
 import ru.gelman.api_gateway.service.AuthServiceClient;
 import ru.gelman.api_gateway.service.OrderServiceClient;
 
-import java.net.URI;
 import java.util.List;
 
 public class ProductServiceController {
@@ -29,39 +28,35 @@ public class ProductServiceController {
     }
 
     @PostMapping(value = "/products", consumes = {MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ProductDto createProduct(@RequestPart("productInfo") CreateProductRq productRq, @RequestPart("images") List<MultipartFile> images) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("productInfo", productRq);
-        images.forEach(img -> body.add(img.getName(), img));
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        return restTemplate.postForEntity(
-                "",
-                requestEntity,
-                ProductDto.class).getBody();
+    public ResponseEntity<ProductDto> createProduct(@RequestPart("productInfo") CreateProductRq productRq, @RequestPart("images") List<MultipartFile> images, @RequestHeader(HttpHeaders.AUTHORIZATION) String authToken) {
+        if (authServiceClient.verifyToken(authToken)) {
+            return orderServiceClient.createProduct(productRq, images);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("WWW-Authenticate", "Basic realm=\"User Service Realm\"").build();
     }
 
     @PutMapping("/products/{id}")
-    public ProductDto updateProductInfo(@RequestBody CreateProductRq productRq, @PathVariable Long id) {
-        RequestEntity<CreateProductRq> request = new RequestEntity<>(HttpMethod.PUT, URI.create(""));
-        ResponseEntity<ProductDto> response = restTemplate.exchange(
-                "",
-                HttpMethod.PUT,
-                request,
-                new ParameterizedTypeReference<ProductDto>() {
-                });
-        return response.getBody();
-
+    public ResponseEntity<ProductDto> updateProductInfo(@RequestBody CreateProductRq productRq, @PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authToken) {
+        if (authServiceClient.verifyToken(authToken)) {
+            return orderServiceClient.updateProductInfo(id, productRq);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("WWW-Authenticate", "Basic realm=\"User Service Realm\"").build();
     }
 
     @DeleteMapping("/products/{id}")
-    public void deleteProduct(@PathVariable Long id) {
-
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authToken) {
+        if (authServiceClient.verifyToken(authToken)) {
+            return orderServiceClient.deleteProduct(id);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("WWW-Authenticate", "Basic realm=\"User Service Realm\"").build();
     }
 
     @GetMapping("/products")
-    public List<ProductDto> getProductList() {
-        return null;
+    public ResponseEntity<List<ProductDto>> getProductList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authToken) {
+        if (authServiceClient.verifyToken(authToken)) {
+            return orderServiceClient.getProductList();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("WWW-Authenticate", "Basic realm=\"User Service Realm\"").build();
+
     }
 }
