@@ -10,20 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.gelman.api_gateway.dto.LoginUserResponse;
 import ru.gelman.api_gateway.dto.LoginUserRq;
 import ru.gelman.api_gateway.dto.RegisterUserRq;
-import ru.gelman.api_gateway.service.AuthServiceClient;
 import ru.gelman.api_gateway.service.UserServiceClient;
 
 @RestController
 @RequestMapping("/api")
 @Slf4j
 public class UserServiceController {
-
-    private final AuthServiceClient authServiceClient;
     private final UserServiceClient userServiceClient;
 
     @Autowired
-    public UserServiceController(AuthServiceClient authServiceClient, UserServiceClient userServiceClient) {
-        this.authServiceClient = authServiceClient;
+    public UserServiceController(UserServiceClient userServiceClient) {
         this.userServiceClient = userServiceClient;
     }
 

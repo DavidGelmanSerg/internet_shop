@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import ru.gelman.api_gateway.dto.CreateProductRq;
 import ru.gelman.api_gateway.dto.ProductDto;
@@ -20,13 +19,11 @@ import java.util.List;
 public class ProductServiceController {
     private final AuthServiceClient authServiceClient;
     private final OrderServiceClient orderServiceClient;
-    private final RestTemplate restTemplate;
 
     @Autowired
-    public ProductServiceController(AuthServiceClient authServiceClient, OrderServiceClient orderServiceClient, RestTemplate restTemplate) {
+    public ProductServiceController(AuthServiceClient authServiceClient, OrderServiceClient orderServiceClient) {
         this.authServiceClient = authServiceClient;
         this.orderServiceClient = orderServiceClient;
-        this.restTemplate = restTemplate;
     }
 
     @PostMapping(value = "/products", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})

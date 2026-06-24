@@ -2,6 +2,7 @@ package ru.gelman.api_gateway.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
@@ -21,14 +22,13 @@ public class AuthServiceClient {
     }
 
     public boolean verifyToken(String token) {
-        return true;
-        /*return restClient
+        return restClient
                 .get()
                 .uri(String.format("%s/auth/verify", userServiceUrl))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .retrieve()
                 .toBodilessEntity()
                 .getStatusCode()
-                .is2xxSuccessful();*/
+                .is2xxSuccessful();
     }
 }
