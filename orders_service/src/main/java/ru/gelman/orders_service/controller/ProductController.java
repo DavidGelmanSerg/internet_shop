@@ -30,8 +30,8 @@ public class ProductController {
         this.imageMapper = imageMapper;
     }
 
-    @PostMapping(value = "/products", consumes = {MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ProductDto createProduct(@RequestPart("productInfo") CreateProductRq productRq, @RequestPart("images") List<MultipartFile> images) {
+    @PostMapping(value = "/products", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ProductDto createProduct(@RequestPart("productInfo") CreateProductRq productRq, @RequestPart(value = "images", required = false) List<MultipartFile> images) {
         try {
             log.info("creating a new product: {}", productRq);
             Product created = productService.create(productMapper.toProductDto(productRq), imageMapper.toImageListEntity(images));
