@@ -4,6 +4,8 @@ spring:
 app:
   services:
     orders:
-      url: localhost:8080
+      url: localhost:41301
     users:
-      url: localhost:8081
+      url: localhost:41300
+server:
+  port: 41303

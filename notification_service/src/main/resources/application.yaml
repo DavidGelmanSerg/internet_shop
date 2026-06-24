@@ -20,3 +20,6 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
       group-id: "notification_consumers"
+
+server:
+  port: 41302
