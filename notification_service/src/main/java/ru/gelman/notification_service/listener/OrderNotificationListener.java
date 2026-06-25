@@ -11,7 +11,6 @@ import ru.gelman.notification_service.service.NotificationService;
 @Component
 @KafkaListener(
         topics = "order-event-topic",
-        groupId = "order-event-consumer-group",
         id = "orderNotificationListener",
         containerFactory = "kafkaListenerContainerFactory"
 )
