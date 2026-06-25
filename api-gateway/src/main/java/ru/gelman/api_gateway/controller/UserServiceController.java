@@ -30,7 +30,7 @@ public class UserServiceController {
         return userServiceClient.loginUser(rq);
     }
 
-    @GetMapping("/personal/${id}")
+    @GetMapping("/personal/{id}")
     public ResponseEntity<LoginUserResponse> getUserInfo(@PathVariable Long id) {
         return userServiceClient.getUserInfo(id);
     }
