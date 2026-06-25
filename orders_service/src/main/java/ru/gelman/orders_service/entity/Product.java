@@ -27,13 +27,12 @@ public class Product {
     @EqualsAndHashCode.Exclude
     private List<Image> images = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "orders_products",
-            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id")
-    )
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Order> orders = new ArrayList<>();
+    @OneToMany(mappedBy = "product")
+    private List<OrderProduct> orderProducts = new ArrayList<>();
+
+    public List<Order> getOrders() {
+        return orderProducts.stream().map(OrderProduct::getOrder).toList();
+    }
 }

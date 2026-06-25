@@ -2,6 +2,8 @@ package ru.gelman.orders_service.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import ru.gelman.orders_service.enums.OrderStatus;
 
 import java.math.BigDecimal;
@@ -21,27 +23,28 @@ public class Order {
     private BigDecimal totalCost;
     private Long clientId;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "orders_products",
-            joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
-    )
-    private List<Product> products = new ArrayList<>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
-    public void addProducts(List<Product> productList) {
-        this.products.addAll(productList);
+    public void addProducts(List<OrderProduct> productList) {
+        this.orderProducts.addAll(productList);
     }
 
-    public void removeProducts(List<Product> productList) {
-        productList.forEach(this.products::remove);
+    public void removeProducts(List<OrderProduct> productList) {
+        productList.forEach(this.orderProducts::remove);
     }
 
     public void updateTotalCost() {
         BigDecimal totalCost = BigDecimal.ZERO;
-        for (Product product : this.products) {
+        for (Product product : this.getProducts()) {
             totalCost = totalCost.add(product.getCost());
         }
         this.totalCost = totalCost;
+    }
+
+    public final List<Product> getProducts() {
+        return orderProducts.stream().map(OrderProduct::getProduct).toList();
     }
 }

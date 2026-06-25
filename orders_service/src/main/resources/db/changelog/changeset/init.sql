@@ -18,6 +18,7 @@ CREATE TABLE orders(
 CREATE TABLE orders_products(
     "order_id" INT NOT NULL,
     "product_id" INT NOT NULL,
+    "product_amount" INT NOT NULL,
     FOREIGN KEY ("order_id") REFERENCES Orders ("id") ON DELETE CASCADE,
     FOREIGN KEY ("product_id") REFERENCES Products ("id") ON DELETE SET NULL,
     PRIMARY KEY ("order_id", "product_id")

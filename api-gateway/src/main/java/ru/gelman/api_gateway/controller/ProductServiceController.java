@@ -26,7 +26,7 @@ public class ProductServiceController {
         this.orderServiceClient = orderServiceClient;
     }
 
-    @PostMapping(value = "/products", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/products", consumes = {MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ProductDto> createProduct(@RequestPart("productInfo") CreateProductRq productRq, @RequestPart(value = "images", required = false) List<MultipartFile> images, @RequestHeader(HttpHeaders.AUTHORIZATION) String authToken) {
         if (authServiceClient.verifyToken(authToken)) {
             return orderServiceClient.createProduct(productRq, images);

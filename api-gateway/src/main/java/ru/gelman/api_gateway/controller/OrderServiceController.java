@@ -30,6 +30,7 @@ public class OrderServiceController {
     @PostMapping("/orders")
     public ResponseEntity<OrderDto> createOrder(@RequestBody CreateOrderRq rq, @RequestHeader(HttpHeaders.AUTHORIZATION) String authToken) {
         if (authServiceClient.verifyToken(authToken)) {
+            log.info("creating product with data: {}", rq);
             return orderServiceClient.createOrder(rq);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("WWW-Authenticate", "Basic realm=\"User Service Realm\"").build();
@@ -50,21 +51,5 @@ public class OrderServiceController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("WWW-Authenticate", "Basic realm=\"User Service Realm\"").build();
 
-    }
-
-    @PutMapping("/orders/{id}/products")
-    public ResponseEntity<Void> addProducts(@PathVariable Long id, @RequestBody List<Long> productIds, @RequestHeader(HttpHeaders.AUTHORIZATION) String authToken) {
-        if (authServiceClient.verifyToken(authToken)) {
-            return orderServiceClient.addProducts(id, productIds);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("WWW-Authenticate", "Basic realm=\"User Service Realm\"").build();
-    }
-
-    @DeleteMapping("/orders/{id}/products")
-    public ResponseEntity<Void> removeProducts(@PathVariable Long id, @RequestBody List<Long> productIds, @RequestHeader(HttpHeaders.AUTHORIZATION) String authToken) {
-        if (authServiceClient.verifyToken(authToken)) {
-            return orderServiceClient.removeProducts(id, productIds);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("WWW-Authenticate", "Basic realm=\"User Service Realm\"").build();
     }
 }
