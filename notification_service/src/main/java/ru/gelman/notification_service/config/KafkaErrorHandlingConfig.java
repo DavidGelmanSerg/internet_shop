@@ -14,11 +14,12 @@ public class KafkaErrorHandlingConfig {
 
     @Bean
     public CommonErrorHandler kafkaErrorHandler() {
-        return new DefaultErrorHandler(
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(
                 (record, exception) -> log.error(
                         "Skipping unprocessable record from topic {} partition {} offset {}",
                         record.topic(), record.partition(), record.offset(), exception),
                 new FixedBackOff(1000L, 3L)
         );
+        return errorHandler;
     }
 }
