@@ -21,25 +21,23 @@ import java.util.List;
 public class OrderController {
     private final OrderMapper orderMapper;
     private final OrderService orderService;
-    private final KafkaTemplate<String, KafkaOrderCreatedEvent> kafkaOrderCreatedEventTemplate;
-    private final KafkaTemplate<String, KafkaOrderStatusUpdatedEvent> KafkaOrderStatusUpdatedEventTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Value("${app.kafka.orders.topic}")
     private String kafkaOrderEventsTopic;
 
     @Autowired
-    public OrderController(OrderService orderService, OrderMapper orderMapper, KafkaTemplate<String, KafkaOrderCreatedEvent> kafkaTemplate, KafkaTemplate<String, KafkaOrderCreatedEvent> kafkaOrderCreatedEventTemplate, KafkaTemplate<String, KafkaOrderStatusUpdatedEvent> kafkaOrderStatusUpdatedEventTemplate) {
+    public OrderController(OrderService orderService, OrderMapper orderMapper, KafkaTemplate<String, Object> kafkaTemplate) {
         this.orderService = orderService;
         this.orderMapper = orderMapper;
-        this.kafkaOrderCreatedEventTemplate = kafkaOrderCreatedEventTemplate;
-        KafkaOrderStatusUpdatedEventTemplate = kafkaOrderStatusUpdatedEventTemplate;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @PostMapping("/orders")
     public OrderDto createOrder(@RequestBody CreateOrderRq rq) {
         log.info("creating order by {}: {}", rq.clientId(), rq);
         Order created = orderService.create(rq.clientId(), rq.productInfos());
-        kafkaOrderCreatedEventTemplate.send(kafkaOrderEventsTopic, new KafkaOrderCreatedEvent(created.getId(), created.getClientId()));
+        kafkaTemplate.send(kafkaOrderEventsTopic, new KafkaOrderCreatedEvent(created.getId(), created.getClientId()));
         log.info("created order: {}", created);
         return orderMapper.toOrderDto(created);
     }
@@ -64,7 +62,7 @@ public class OrderController {
     public OrderDto updateOrderStatus(@PathVariable Long id, @RequestParam("status") OrderStatus status) {
         log.info("cancelling order with id {}", id);
         Order updated = orderService.changeStatus(id, status);
-        KafkaOrderStatusUpdatedEventTemplate.send(kafkaOrderEventsTopic, new KafkaOrderStatusUpdatedEvent(updated.getId(), updated.getClientId(), updated.getStatus().toString()));
+        kafkaTemplate.send(kafkaOrderEventsTopic, new KafkaOrderStatusUpdatedEvent(updated.getId(), updated.getClientId(), updated.getStatus().toString()));
         log.info("updated order: {}", updated);
         return orderMapper.toOrderDto(updated);
     }
