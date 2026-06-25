@@ -31,7 +31,7 @@ public class ProductService {
         product.setDescription(productData.description());
         product.setAmount(productData.amount());
         product.setCost(productData.cost());
-        product.setType(product.getType());
+        product.setType(productData.type());
 
         log.info("saving new product: {}", product);
         Product created = repository.save(product);
