@@ -59,29 +59,42 @@ public class OrderServiceClient {
         return restTemplate.exchange(String.format("%s/orders/%d/status", orderServiceUrl, id), HttpMethod.PUT, null, OrderDto.class, Map.of("status", status));
     }
 
-    public ResponseEntity<Void> addProducts(Long id, List<Long> productIds) {
-        return restClient.put().uri(String.format("%s/orders/%d/products/add", orderServiceUrl, id)).body(productIds).retrieve().toBodilessEntity();
-    }
-
-    public ResponseEntity<Void> removeProducts(Long id, List<Long> productIds) {
-        return restClient.put().uri(String.format("%s/orders/%d/products/remove", orderServiceUrl, id)).body(productIds).retrieve().toBodilessEntity();
-    }
-
     public ResponseEntity<ProductDto> updateProductInfo(Long id, CreateProductRq productRq) {
         return restClient.put().uri(String.format("%s/products/%d", orderServiceUrl, id)).body(productRq).retrieve().toEntity(ProductDto.class);
     }
 
     public ResponseEntity<Void> deleteProduct(Long id) {
-        return restClient.delete().uri(String.format("%s/products/%d", orderServiceUrl, id)).retrieve().toBodilessEntity();
+        return restClient
+                .delete()
+                .uri(String.format("%s/products/%d", orderServiceUrl, id))
+                .retrieve()
+                .toBodilessEntity();
     }
 
     public ResponseEntity<List<ProductDto>> getProductList() {
-        return restClient.get().uri(String.format("%s/products"), orderServiceUrl).retrieve().toEntity(new ParameterizedTypeReference<>() {
-        });
+        return restClient
+                .get()
+                .uri(String.format("%s/products"), orderServiceUrl)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
 
     }
 
     public ResponseEntity<Resource> getImage(Long id) {
-        return restClient.get().uri(String.format("%s/images/%d"), orderServiceUrl, id).retrieve().toEntity(Resource.class);
+        return restClient
+                .get()
+                .uri(String.format("%s/images/%d"), orderServiceUrl, id)
+                .retrieve()
+                .toEntity(Resource.class);
+    }
+
+    public ResponseEntity<List<OrderDto>> getOrderList() {
+        return restClient
+                .get()
+                .uri(String.format("%s/orders", orderServiceUrl))
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
     }
 }

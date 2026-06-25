@@ -2,12 +2,16 @@ package ru.gelman.api_gateway.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import ru.gelman.api_gateway.dto.LoginUserResponse;
 import ru.gelman.api_gateway.dto.LoginUserRq;
 import ru.gelman.api_gateway.dto.RegisterUserRq;
+import ru.gelman.api_gateway.dto.UserDto;
+
+import java.util.List;
 
 @Component
 public class UserServiceClient {
@@ -21,21 +25,38 @@ public class UserServiceClient {
     }
 
 
-    public ResponseEntity<LoginUserResponse> registerUser(RegisterUserRq rq) {
+    public ResponseEntity<Void> registerUser(RegisterUserRq rq) {
         return restClient
                 .post()
                 .uri(String.format("%s/register", userServiceUrl))
                 .body(rq)
                 .retrieve()
-                .toEntity(LoginUserResponse.class);
+                .toBodilessEntity();
     }
 
-    public ResponseEntity<LoginUserResponse> loginUser(LoginUserRq rq) {
+    public ResponseEntity<Void> loginUser(LoginUserRq rq) {
         return restClient
                 .post()
                 .uri(String.format("%s/login", userServiceUrl))
                 .body(rq)
                 .retrieve()
+                .toBodilessEntity();
+    }
+
+    public ResponseEntity<LoginUserResponse> getUserInfo(Long userId) {
+        return restClient
+                .get()
+                .uri(String.format("%s/personal/%d", userServiceUrl, userId))
+                .retrieve()
                 .toEntity(LoginUserResponse.class);
+    }
+
+    public ResponseEntity<List<UserDto>> getUserList() {
+        return restClient
+                .get()
+                .uri(String.format("%s/users", userServiceUrl))
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
     }
 }
