@@ -36,7 +36,7 @@ public class ProductService {
         log.info("saving new product: {}", product);
         Product created = repository.save(product);
 
-        if (!images.isEmpty()) {
+        if (images != null && !images.isEmpty()) {
             log.info("saving images for product: {}", created);
             List<Image> imageList = imageService.saveImagesForProduct(images, created);
             created.setImages(imageList);

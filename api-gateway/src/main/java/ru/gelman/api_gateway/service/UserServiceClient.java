@@ -5,21 +5,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestTemplate;
 import ru.gelman.api_gateway.dto.LoginUserResponse;
 import ru.gelman.api_gateway.dto.LoginUserRq;
 import ru.gelman.api_gateway.dto.RegisterUserRq;
 
 @Component
 public class UserServiceClient {
-    private final RestTemplate restTemplate;
     private final RestClient restClient;
     @Value("${app.services.users.url}")
     private String userServiceUrl;
 
     @Autowired
-    public UserServiceClient(RestTemplate restTemplate, RestClient restClient) {
-        this.restTemplate = restTemplate;
+    public UserServiceClient(RestClient restClient) {
         this.restClient = restClient;
     }
 
