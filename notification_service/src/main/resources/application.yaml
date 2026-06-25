@@ -15,7 +15,7 @@ spring:
   config:
     encoding: UTF-8
   kafka:
-    bootstrap-servers: "localhost:41304"
+    bootstrap-servers: "http://localhost:41304"
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
