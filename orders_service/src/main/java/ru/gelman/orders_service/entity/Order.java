@@ -38,8 +38,8 @@ public class Order {
 
     public void updateTotalCost() {
         BigDecimal totalCost = BigDecimal.ZERO;
-        for (Product product : this.getProducts()) {
-            totalCost = totalCost.add(product.getCost());
+        for (OrderProduct orderProduct : this.orderProducts) {
+            totalCost = totalCost.add(orderProduct.getProduct().getCost().multiply(BigDecimal.valueOf(orderProduct.getAmount())));
         }
         this.totalCost = totalCost;
     }

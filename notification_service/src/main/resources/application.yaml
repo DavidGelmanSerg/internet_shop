@@ -23,6 +23,11 @@ spring:
       properties:
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
         spring.json.trusted.packages: "ru.gelman.notification_service.events"
+        # orders-service publishes its own DTOs under a different package/class name;
+        # these tokens (shared with orders-service's producer config) let us resolve
+        # them to our own event classes instead of needing orders-service's classes
+        # on this service's classpath.
+        spring.json.type.mapping: "orderCreated:ru.gelman.notification_service.events.OrderCreatedEvent,orderStatusChanged:ru.gelman.notification_service.events.OrderChangeStatusEvent"
 
 server:
   port: 41302

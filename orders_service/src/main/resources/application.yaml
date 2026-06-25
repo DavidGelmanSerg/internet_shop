@@ -20,8 +20,13 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      properties:
+        # Maps our local DTOs to tokens shared with notification-service's own
+        # (differently-named/packaged) event classes, since JacksonJsonDeserializer
+        # resolves types by class name and the consumer can't load our classes.
+        spring.json.type.mapping: "orderCreated:ru.gelman.orders_service.dto.KafkaOrderCreatedEvent,orderStatusChanged:ru.gelman.orders_service.dto.KafkaOrderStatusChangedEvent"
 server:
-  port: 41301
+  port: 8080
 app:
   kafka:
     orders:
