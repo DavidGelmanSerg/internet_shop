@@ -59,4 +59,12 @@ public class UserServiceClient {
                 .toEntity(new ParameterizedTypeReference<>() {
                 });
     }
+
+    public ResponseEntity<String> getAdminPanelHtml() {
+        return restClient
+                .get()
+                .uri(String.format("%s/", userServiceUrl))
+                .retrieve()
+                .toEntity(String.class);
+    }
 }

@@ -45,6 +45,13 @@ public class AdminPanelController {
             return userServiceClient.getUserList();
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("WWW-Authenticate", "Basic realm=\"User Service Realm\"").build();
+    }
 
+    @GetMapping("/")
+    public ResponseEntity<String> getAdminPanel(@RequestHeader(HttpHeaders.AUTHORIZATION) String authToken) {
+        if (authServiceClient.verifyToken(authToken)) {
+            return userServiceClient.getAdminPanelHtml();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("WWW-Authenticate", "Basic realm=\"User Service Realm\"").build();
     }
 }
