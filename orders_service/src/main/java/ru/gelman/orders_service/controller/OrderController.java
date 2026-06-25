@@ -36,7 +36,7 @@ public class OrderController {
     public OrderDto createOrder(@RequestBody CreateOrderRq rq) {
         log.info("creating order by {}: {}", rq.clientId(), rq);
         Order created = orderService.create(rq.clientId(), rq.productInfos());
-        //kafkaTemplate.send(kafkaOrderEventsTopic, new KafkaOrderCreatedEvent(created.getId(), created.getClientId()));
+        kafkaTemplate.send(kafkaOrderEventsTopic, new KafkaOrderCreatedEvent(created.getId(), created.getClientId()));
         log.info("created order: {}", created);
         return orderMapper.toOrderDto(created);
     }

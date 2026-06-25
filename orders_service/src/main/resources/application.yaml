@@ -7,7 +7,6 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     enabled: true
-    drop-first: true
   datasource:
     url: jdbc:postgresql://localhost:5432/orders_database
     username: postgres
