@@ -16,7 +16,7 @@ spring:
       max-file-size: 20MB
       max-request-size: 25MB
   kafka:
-    bootstrap-servers: "http://localhost:41304"
+    bootstrap-servers: "localhost:41304"
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
