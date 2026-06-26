@@ -40,7 +40,7 @@ public class NotificationService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail);
             message.setTo(emailInfo.email());
-            message.setText(String.format("Заказ %d успешно создан", event.orderId()));
+            message.setText(String.format("Р—Р°РєР°Р· %d СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅ", event.orderId()));
             email.send(message);
         }
     }
@@ -51,7 +51,7 @@ public class NotificationService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail);
             message.setTo(emailInfo.email());
-            message.setText(String.format("Статус заказа %d успешно обновлен на %s", event.orderId(), event.newStatus()));
+            message.setText(String.format("РЎС‚Р°С‚СѓСЃ Р·Р°РєР°Р·Р° %d СѓСЃРїРµС€РЅРѕ РѕР±РЅРѕРІР»РµРЅ РЅР° %s", event.orderId(), event.newStatus()));
             email.send(message);
         }
     }
@@ -62,7 +62,7 @@ public class NotificationService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail);
             message.setTo(emailInfo.email());
-            message.setText("Вы успешно зарегистрировались");
+            message.setText("Р’С‹ СѓСЃРїРµС€РЅРѕ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°Р»РёСЃСЊ");
             email.send(message);
         }
     }
@@ -73,7 +73,7 @@ public class NotificationService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail);
             message.setTo(emailInfo.email());
-            message.setText("Вы успешно вошли в аккаунт");
+            message.setText("Р’С‹ СѓСЃРїРµС€РЅРѕ РІРѕС€Р»Рё РІ Р°РєРєР°СѓРЅС‚");
             email.send(message);
         }
     }

@@ -34,3 +34,6 @@ CREATE TABLE images(
     "size" INT NOT NULL DEFAULT 0,
     "bytes" BYTEA NOT NULL
 );
+
+-- INSERT INTO products ("name", "description", "cost", "amount", "type")
+-- VALUES ('Test Product', 'Seed test product', 9.99, 100, 'test');
